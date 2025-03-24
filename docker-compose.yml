@@ -1,0 +1,9 @@
+services:
+  reto-advance-03-backend:
+    image: ${DOCKER_REGISTRY-}retoadvance03backend
+    build:
+      context: .
+      dockerfile: reto-advance-03-backend/Dockerfile
+    ports:
+        - "8080:8080"
+        - "8081:8081"
