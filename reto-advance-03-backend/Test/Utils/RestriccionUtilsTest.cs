@@ -23,6 +23,8 @@ namespace reto_advance_03_backend.Test.Utils
         [Fact]
         public void ValidarRestriccion_ReturnsExpectedResults()
         {
+            _logger.LogInformation("Empieza unit test de clase de utilidad");
+
             // Act
             var horariosDisponibles = new List<HorarioRestriccion> {  new HorarioRestriccion { Id = 1, DiaSemana = 1, TerminaPlaca = "[\"1\",\"2\"]", Inicio = new TimeSpan(6, 0, 0), Fin = new TimeSpan(9, 30, 0) },
         new HorarioRestriccion { Id = 2, DiaSemana = 1, TerminaPlaca = "[\"1\",\"2\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) },

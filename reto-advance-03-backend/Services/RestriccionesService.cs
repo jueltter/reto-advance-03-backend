@@ -35,14 +35,6 @@ namespace reto_advance_03_backend.Services
             return new List<Restriccion> { restriccion };
         }
 
-        public class Auxiliar
-        {
-            [AllowNull]
-            List<String> Placas { get; set; }
-            [AllowNull]
-            HorarioRestriccion HorarioRestriccion { get; set; }
-        }
-
 
     }
 
