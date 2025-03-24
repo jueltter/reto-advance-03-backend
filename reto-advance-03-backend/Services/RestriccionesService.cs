@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
 using Newtonsoft.Json;
 using reto_advance_03_backend.Entities;
@@ -26,20 +27,38 @@ namespace reto_advance_03_backend.Services
 
             _logger.LogInformation("fechaLocal: {Fecha}, diaSemana: {DiaSemana}, diaSemana: {DiaSemana}, horaYMinutos: {HoraYMinutos}, ultimoDigitoPlaca: {UltimoDigitoPlaca}", Fecha, DiaSemana, (int) DiaSemana, HoraYMinutos, UltimoDigitoPlaca);
 
-            var HorariosRestriccion = _repo.FindAll();
+            var horariosRestriccion = _repo.FindAll();
+            
+            //_logger.LogInformation("horariosRestriccion: {horariosRestriccionFiltrados}", horariosRestriccionFiltrados);
 
-            _logger.LogInformation("horariosRestriccion: {HorariosRestriccion}", HorariosRestriccion);
-
-            var PuedeCircular = HorariosRestriccion.All(horarioRestriccion => {
+            var horariosRestriccionFiltradosPorPlaca = horariosRestriccion.Where(horarioRestriccion => {
                 List<string> TerminaPlaca = JsonConvert.DeserializeObject<List<string>>(horarioRestriccion.TerminaPlaca);
-                TerminaPlaca = TerminaPlaca != null ? TerminaPlaca : Enumerable.Empty<string>().ToList();
+                return TerminaPlaca.Contains(UltimoDigitoPlaca);
+            }).ToList();
+
+            _logger.LogInformation("horariosRestriccionFiltradosPorPlaca: {horariosRestriccionFiltradosPorPlaca}", horariosRestriccionFiltradosPorPlaca);
+
+            var horariosRestriccionFiltradosPorPlacaYDia = horariosRestriccionFiltradosPorPlaca.Where(horarioRestriccion => horarioRestriccion.DiaSemana == ((int)DiaSemana)).ToList();
+
+            _logger.LogInformation("horariosRestriccionFiltradosPorPlacaYDia: {horariosRestriccionFiltradosPorPlacaYDia}", horariosRestriccionFiltradosPorPlacaYDia);
+
+            var results = horariosRestriccionFiltradosPorPlacaYDia.ConvertAll(horarioRestriccion => {
+                _logger.LogInformation("id: {id}, horarioRestriccion: {horarioRestriccion}", horarioRestriccion.Id, horarioRestriccion);
                 
-                return horarioRestriccion.DiaSemana == ((int)DiaSemana)
-                && (horarioRestriccion.Inicio <= HoraYMinutos)
-                && (horarioRestriccion.Fin >= HoraYMinutos)
-                && (TerminaPlaca.Contains(UltimoDigitoPlaca))
-                ;
+                var esDespuesOIgualQueInicio = TimeSpan.Compare(HoraYMinutos, horarioRestriccion.Inicio) >= 0;
+
+                var esAntesOIgualQueFin = TimeSpan.Compare(HoraYMinutos,horarioRestriccion.Fin) <=0;
+
+                var noEsEntre = !(esDespuesOIgualQueInicio && esAntesOIgualQueFin);
+                
+                _logger.LogInformation("noEsEntre: {noEsEntre}, esDespuesOIgualQueInicio: {esDespuesOIgualQueInicio}, esAntesOIgualQueFin: {esAntesOIgualQueFin}", noEsEntre, esDespuesOIgualQueInicio, esAntesOIgualQueFin);
+
+                return noEsEntre;
             });
+
+            _logger.LogInformation("results: {results}", results);
+
+            var PuedeCircular = results.All(result => result);
 
             var restriccion = new Restriccion
             {
@@ -50,5 +69,17 @@ namespace reto_advance_03_backend.Services
 
             return new List<Restriccion> { restriccion };
         }
+
+        public class Auxiliar
+        {
+            [AllowNull]
+            List<String> Placas { get; set; }
+            [AllowNull]
+            HorarioRestriccion HorarioRestriccion { get; set; }
+        }
+
+
     }
+
+    
 }

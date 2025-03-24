@@ -6,6 +6,16 @@ using reto_advance_03_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.AllowAnyOrigin()
+.AllowAnyHeader()
+.AllowAnyMethod();
+    });
+});
+
 // Add in-memory DB
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseInMemoryDatabase("MyInMemoryDb"));
@@ -41,17 +51,7 @@ using (var scope = app.Services.CreateScope())
         new HorarioRestriccion { Id = 7, DiaSemana = 4, TerminaPlaca = "[\"7\",\"8\"]", Inicio = new TimeSpan(6, 0, 0), Fin = new TimeSpan(9, 30, 0) },
         new HorarioRestriccion { Id = 8, DiaSemana = 4, TerminaPlaca = "[\"7\",\"8\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) },
         new HorarioRestriccion { Id = 9, DiaSemana = 5, TerminaPlaca = "[\"9\",\"0\"]", Inicio = new TimeSpan(6, 0, 0), Fin = new TimeSpan(9, 30, 0) },
-        new HorarioRestriccion { Id = 10, DiaSemana = 5, TerminaPlaca = "[\"9\",\"0\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) },
-        new HorarioRestriccion { Id = 11, DiaSemana = 6, TerminaPlaca = "[\"1\",\"2\"]", Inicio = new TimeSpan(6, 0, 0), Fin = new TimeSpan(9, 30, 0) },
-        new HorarioRestriccion { Id = 12, DiaSemana = 6, TerminaPlaca = "[\"1\",\"2\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) },
-        new HorarioRestriccion { Id = 13, DiaSemana = 7, TerminaPlaca = "[\"3\",\"4\"]", Inicio = new TimeSpan(6, 0, 0), Fin = new TimeSpan(9, 30, 0) },
-        new HorarioRestriccion { Id = 14, DiaSemana = 7, TerminaPlaca = "[\"3\",\"4\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) },
-        new HorarioRestriccion { Id = 15, DiaSemana = 1, TerminaPlaca = "[\"5\",\"6\"]", Inicio = new TimeSpan(6, 0, 0), Fin = new TimeSpan(9, 30, 0) },
-        new HorarioRestriccion { Id = 16, DiaSemana = 1, TerminaPlaca = "[\"5\",\"6\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) },
-        new HorarioRestriccion { Id = 17, DiaSemana = 2, TerminaPlaca = "[\"7\",\"8\"]", Inicio = new TimeSpan(6, 0, 0), Fin = new TimeSpan(9, 30, 0) },
-        new HorarioRestriccion { Id = 18, DiaSemana = 2, TerminaPlaca = "[\"7\",\"8\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) },
-        new HorarioRestriccion { Id = 19, DiaSemana = 3, TerminaPlaca = "[\"9\",\"0\"]", Inicio = new TimeSpan(6, 0, 0), Fin = new TimeSpan(9, 30, 0) },
-        new HorarioRestriccion { Id = 20, DiaSemana = 3, TerminaPlaca = "[\"9\",\"0\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) }
+        new HorarioRestriccion { Id = 10, DiaSemana = 5, TerminaPlaca = "[\"9\",\"0\"]", Inicio = new TimeSpan(16, 0, 0), Fin = new TimeSpan(20, 0, 0) }
     );
 
     context.Vehiculos.AddRange(
@@ -88,6 +88,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 
