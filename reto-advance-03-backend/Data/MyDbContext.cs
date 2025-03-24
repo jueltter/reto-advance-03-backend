@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using reto_advance_03_backend.Entities;
 
-namespace reto_advance_03_backend
+namespace reto_advance_03_backend.Data
 {
     public class MyDbContext : DbContext
     {

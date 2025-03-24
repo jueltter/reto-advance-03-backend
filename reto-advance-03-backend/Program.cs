@@ -1,12 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-using reto_advance_03_backend;
+using reto_advance_03_backend.Data;
 using reto_advance_03_backend.Entities;
+using reto_advance_03_backend.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add in-memory DB
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseInMemoryDatabase("MyInMemoryDb"));
+
+// Register repositories
+builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
 
 // Add services to the container.
 
