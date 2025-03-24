@@ -24,6 +24,13 @@ namespace reto_advance_03_backend.Entities
 
         [Column("fin")]
         public TimeSpan Fin { get; set; }
+        
+        public override string ToString()
+        {
+            return $"Id: {Id}, DiaSemana: {DiaSemana}, TerminaPlaca: {TerminaPlaca}, Inicio: {Inicio}, Fin: {Fin}";
+        }
+
+
 
 
     }

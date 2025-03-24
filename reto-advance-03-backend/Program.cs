@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using reto_advance_03_backend.Data;
 using reto_advance_03_backend.Entities;
 using reto_advance_03_backend.Repositories;
+using reto_advance_03_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,10 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 
 // Register repositories
 builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
+builder.Services.AddScoped<IHorarioRestriccionRepository, HorarioRestriccionRepository>();
+
+// Register services
+builder.Services.AddScoped<IRestriccionesService, RestriccionesService>();
 
 // Add services to the container.
 
