@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using reto_advance_03_backend.Data;
 using reto_advance_03_backend.Entities;
@@ -17,6 +19,7 @@ namespace reto_advance_03_backend.Controllers
         }
 
         [HttpGet("")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<List<Vehiculo>> FindAll([FromQuery(Name = "placa")] string? SearchString)
         {
             return Ok(_repo.FindAll(SearchString));

@@ -1,4 +1,7 @@
+
+using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using reto_advance_03_backend.Data;
 using reto_advance_03_backend.Entities;
 using reto_advance_03_backend.Repositories;
@@ -28,6 +31,17 @@ builder.Services.AddScoped<IHorarioRestriccionRepository, HorarioRestriccionRepo
 builder.Services.AddScoped<IRestriccionesService, RestriccionesService>();
 
 // Add services to the container.
+builder.Services.AddAuthentication().AddJwtBearer(options => {
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("correct horse battery staple correct horse battery staple correct horse battery staple"));
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        IssuerSigningKey = key
+    };
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
